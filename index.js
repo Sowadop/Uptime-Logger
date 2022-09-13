@@ -1,5 +1,4 @@
 require('dotenv').config();
-require('./keepAlive.js')();
 const config = require("./config.json")
 const {
     Client,
@@ -10,9 +9,9 @@ const {
     MessageEmbed,
     MessageSelectMenu,  
 } = require("discord.js");
-
+const Discord = require("discord.js");
 const client = new Client({
-    shards: 'auto',
+    shards: 'auto', 
     partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
     intents: [
         Intents.FLAGS.GUILDS,
@@ -33,10 +32,10 @@ const client = new Client({
     ],
     presence: {
         activities: [{
-            name: `Uptime Logger`,
+            name: `Bot status`,
             type: "WATCHING",
         }],
-        status: "online"
+        status: "dnd"
     }
 });
 
@@ -62,7 +61,7 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
             {
                 newPresence.guild.channels.cache.get(config.Channels).send({
                     embeds: [new MessageEmbed()
-                    .setTitle(`🟢︱Uptime Alert`)
+                    .setTitle(`<a:online:1015561537747955762>︱Uptime Alert`)
                     .setDescription(`Looks like **${newPresence.user.tag}** is back **Online!**`)
                     .setColor(`GREEN`)
                     .setThumbnail(newPresence.user.avatarURL({ format: "png", size: 1024 }))
@@ -76,7 +75,7 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
             {
                 newPresence.guild.channels.cache.get(config.Channels).send({
                     embeds: [new MessageEmbed()
-                    .setTitle(`🔴︱Downtime Alert`)
+                    .setTitle(`<a:offine:1015560568180047902>︱Downtime Alert`)
                     .setDescription(`Looks like **${newPresence.user.tag}** went **Offline!**`)
                     .setColor(`RED`)
                     .setThumbnail(newPresence.user.avatarURL({ format: "png", size: 1024 }))
@@ -92,7 +91,7 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
     }
 });
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN || config.TOKEN);
 
 client.logger = (data) => {
   let logstring = `${String(`M` + `i` + `l` + `a` + `n` + `i` + `o` + ` Logs`).brightGreen}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan}${` [::] `.magenta}`
